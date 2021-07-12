@@ -50,7 +50,7 @@ exports.save = (req, res) => {
 };
 
 
-cron.schedule("* */5 * * * *", saveGameData);
+cron.schedule("*/5 * * * *", saveGameData);
 
 function saveGameData(){
 	console.log("Insert data into DB");
