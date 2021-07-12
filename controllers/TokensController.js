@@ -51,8 +51,9 @@ exports.save = (req, res) => {
 
 
 cron.schedule("* */5 * * * *", saveGameData);
-console.log("Insert data into DB");
+
 function saveGameData(){
+	console.log("Insert data into DB");
 	axios.get("https://ss247.life/demo/streaminfo.php")
 		.then(async function (response) {
 			await GameDataModel.deleteMany({}).then(()=>{},(err)=>console.log(err));
