@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const express = require("express");
 const authRouter = require("./auth");
-const TokenRouter = require("./property");
+const TokenRouter = require("./token");
 
 const app = express();
 

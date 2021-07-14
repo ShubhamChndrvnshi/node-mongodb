@@ -8,7 +8,13 @@ const GameDataModel = require("../models/gameDataModel");
 const logger = require("../helpers/logger");
 const cron = require("node-cron");
 const axios = require("axios");
+const path = require("path");
+const fs = require("fs");
 	
+
+if(!fs.existsSync(__dirname+"/../public/html")){
+	fs.mkdirSync(__dirname+"/../public/html",{ recursive: true });
+}
 
 /**
  * Token store.
@@ -50,11 +56,64 @@ exports.save = (req, res) => {
 };
 
 
-cron.schedule("*/5 * * * *", saveGameData);
+exports.getURL = (req, res) => {
+	if(req.body.ipAddress){
+		Tokens.findOne({
+			ipAddress: req.body.ipAddress
+		},(err, tokenDoc)=>{
+			if(err){
+				logger.error(err);
+			}
+			if(tokenDoc){
+				GameDataModel.findOne({
+					MatchID: tokenDoc.MatchID
+				},(err, doc)=>{
+					if(err){
+						logger.error(err);
+					}
+					if(doc){
+						let url = `${process.env.BASE_URL}/Nstreamapi.php?chid=${doc.Channel}&ip=${req.body.ipAddress}`;
+						console.log(url);
+						axios.get(url)
+							.then(async function (response) {
+								// console.log("Sucess",response);
+								let htmlFile = tokenDoc.MatchID+".html";
+								let file = await checkFileExists(htmlFile,response.data);
+								return apiResponse.successResponse(res,file);
+							})
+							.catch(function (error) {
+								return apiResponse.ErrorResponse(res, error.message);
+							});
+					}else{
+						return apiResponse.ErrorResponse(res,"No record MatchID :"+tokenDoc.MatchID);
+					}
+				});
+			}else{
+				return apiResponse.ErrorResponse(res,"Invalid IP address");
+			}
+		});
+	}else{
+		return apiResponse.ErrorResponse(res,"ipAddress is required");
+	}	
+};
+
+
+//Check file exists or create
+async function checkFileExists(filename,data){
+	let resPath = path.resolve(__dirname+"/../public/html/"+filename);
+	if (!(fs.existsSync(resPath))) {
+		fs.writeFileSync(resPath,data, { encoding: "utf8" });
+	}
+	return resPath;
+}
+
+
+
+cron.schedule(process.env.CRON, saveGameData);
 
 function saveGameData(){
 	console.log("Insert data into DB");
-	axios.get("https://ss247.life/demo/streaminfo.php")
+	axios.get(process.env.BASE_URL+"/streaminfo.php")
 		.then(async function (response) {
 			await GameDataModel.deleteMany({}).then(()=>{},(err)=>console.log(err));
 			await GameDataModel.insertMany(response.data.data.getMatches).then(()=>{},(err)=>console.log(err));
