@@ -66,7 +66,8 @@ exports.getURL = (req, res) => {
 			}
 			if(tokenDoc){
 				GameDataModel.findOne({
-					MatchID: tokenDoc.MatchID
+					MatchID: tokenDoc.MatchID,
+					IsLive: 1
 				},(err, doc)=>{
 					if(err){
 						logger.error(err);
