@@ -10,6 +10,7 @@ const cron = require("node-cron");
 const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
+const cluster = require("cluster");
 	
 
 if(!fs.existsSync(__dirname+"/../public/html")){
@@ -109,8 +110,9 @@ async function checkFileExists(filename,data){
 }
 
 
-
-cron.schedule(process.env.CRON, saveGameData);
+if(cluster.isMaster){
+	cron.schedule(process.env.CRON, saveGameData);
+}
 
 function saveGameData(){
 	console.log("Insert data into DB");
