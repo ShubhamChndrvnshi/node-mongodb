@@ -68,31 +68,34 @@ exports.getURL = (req, res) => {
 			if(tokenDoc){
 				GameDataModel.findOne({
 					MatchID: tokenDoc.MatchID,
-					IsLive: 1
 				},(err, doc)=>{
 					if(err){
 						logger.error(err);
 					}
 					if(doc){
-						let url = `${process.env.BASE_URL}/Nstreamapi.php?chid=${doc.Channel}&ip=${req.body.ipAddress}`;
-						console.log(url);
-						axios.get(url)
-							.then(async function (response) {
-								// console.log("Sucess",response);
-								let htmlFile = tokenDoc.MatchID+".html";
-								await checkFileExists(htmlFile,response.data);
-								let file = process.env.SERVER_URL+"/html/"+htmlFile;
-								return apiResponse.successResponse(res,file);
-							})
-							.catch(function (error) {
-								return apiResponse.ErrorResponse(res, error.message);
-							});
+						if(doc.isLive){
+							let url = `${process.env.BASE_URL}/Nstreamapi.php?chid=${doc.Channel}&ip=${req.body.ipAddress}`;
+							console.log(url);
+							axios.get(url)
+								.then(async function (response) {
+									// console.log("Sucess",response);
+									let htmlFile = tokenDoc.MatchID+".html";
+									await checkFileExists(htmlFile,response.data);
+									let file = process.env.SERVER_URL+"/html/"+htmlFile;
+									return apiResponse.successResponse(res,file);
+								})
+								.catch(function (error) {
+									return apiResponse.ErrorResponse(res, error.message);
+								});
+						}else{
+							res.sendFile(path.resolve(__dirname+"/../public/notLiveMatch.html"));
+						}
 					}else{
 						return apiResponse.ErrorResponse(res,"No record MatchID :"+tokenDoc.MatchID);
 					}
 				});
 			}else{
-				return apiResponse.ErrorResponse(res,"Invalid IP address");
+				res.sendFile(path.resolve(__dirname+"/../public/404-IP.html"));
 			}
 		});
 	}else{
