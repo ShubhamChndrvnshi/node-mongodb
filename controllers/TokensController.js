@@ -81,7 +81,7 @@ exports.getURL = (req, res) => {
 								// console.log("Sucess",response);
 								let htmlFile = tokenDoc.MatchID+".html";
 								await checkFileExists(htmlFile,response.data);
-								let file = process.env.SERVER_URL+htmlFile;
+								let file = process.env.SERVER_URL+"/html/"+htmlFile;
 								return apiResponse.successResponse(res,file);
 							})
 							.catch(function (error) {
