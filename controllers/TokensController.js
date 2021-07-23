@@ -91,7 +91,7 @@ exports.getURL = (req, res) => {
 							res.sendFile(path.resolve(__dirname+"/../public/notLiveMatch.html"));
 						}
 					}else{
-						return apiResponse.ErrorResponse(res,"No record MatchID :"+tokenDoc.MatchID);
+						res.sendFile(path.resolve(__dirname+"/../public/404noMatchID.html"));
 					}
 				});
 			}else{
