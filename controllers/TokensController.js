@@ -73,7 +73,7 @@ exports.getURL = (req, res) => {
 						logger.error(err);
 					}
 					if(doc){
-						if(doc.isLive){
+						if(doc.IsLive){
 							let url = `${process.env.BASE_URL}/Nstreamapi.php?chid=${doc.Channel}&ip=${req.body.ipAddress}`;
 							console.log(url);
 							axios.get(url)
@@ -88,14 +88,14 @@ exports.getURL = (req, res) => {
 									return apiResponse.ErrorResponse(res, error.message);
 								});
 						}else{
-							res.sendFile(path.resolve(__dirname+"/../public/notLiveMatch.html"));
+							return apiResponse.successResponse(res,`${process.env.SERVER_URL}/notLiveMatch.html`);
 						}
 					}else{
-						res.sendFile(path.resolve(__dirname+"/../public/404noMatchID.html"));
+						return apiResponse.successResponse(res,`${process.env.SERVER_URL}/404noMatchID.html`);
 					}
 				});
 			}else{
-				res.sendFile(path.resolve(__dirname+"/../public/404-IP.html"));
+				return apiResponse.successResponse(res,`${process.env.SERVER_URL}/404-IP.html`);
 			}
 		});
 	}else{
