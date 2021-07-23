@@ -2,6 +2,7 @@
   "name": "rest-api-nodejs-mongodb",
   "version": "1.0.0",
   "private": true,
+  "bin": "bin/www",
   "scripts": {
     "start": "node --trace-warnings ./bin/www",
     "dev": "nodemon ./bin/www",
@@ -48,6 +49,14 @@
   "nodemonConfig": {
     "ignore": [
       "locales/*.json"
+    ]
+  },
+  "pkg": {
+    "assets": [
+      "./node_modules/**/*",
+      "./public/**/*",
+      "./images/**/*",
+      "./locales/**/*"
     ]
   }
 }
