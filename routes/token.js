@@ -8,4 +8,6 @@ router.post("/", TokensController.save);
 
 router.post("/getUrl", TokensController.getURL);
 
+router.get("/live/matches", TokensController.getLiveMatches);
+
 module.exports = router;

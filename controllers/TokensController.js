@@ -5,6 +5,7 @@ const GameDataModel = require("../models/gameDataModel");
 // const auth = require("../middlewares/jwt");
 // const mongoose = require("mongoose");
 // const constants = require("../helpers/constants");
+const json2html = require("json2html");
 const logger = require("../helpers/logger");
 const cron = require("node-cron");
 const axios = require("axios");
@@ -104,6 +105,10 @@ exports.getURL = (req, res) => {
 };
 
 
+exports.getLiveMatches = (req, res) => {
+	res.sendFile(__dirname+"/../public/liveMatches.html");
+};
+
 //Check file exists or create
 async function checkFileExists(filename,data){
 	let resPath = path.resolve(__dirname+"/../public/html/"+filename);
@@ -112,7 +117,6 @@ async function checkFileExists(filename,data){
 	}
 	return resPath;
 }
-
 
 if(cluster.isMaster){
 	cron.schedule(process.env.CRON, saveGameData);
@@ -124,6 +128,18 @@ function saveGameData(){
 		.then(async function (response) {
 			await GameDataModel.deleteMany({}).then(()=>{},(err)=>console.log(err));
 			await GameDataModel.insertMany(response.data.data.getMatches).then(()=>{},(err)=>console.log(err));
+			let temp = [];
+			response.data.data.getMatches.forEach((match=>{
+				if(match.IsLive){
+					temp.push({
+						MatchID: match.MatchID,
+						Name: match.Name,
+						UTCTimeStart: match.UTCTimeStart,
+						IsLive: match.IsLive
+					});
+				}
+			}));
+			fs.writeFileSync(__dirname+"/../public/liveMatches.html", json2html.render(temp), { encoding: "utf8" });
 		})
 		.catch(function (error) {
 			logger.error(error);

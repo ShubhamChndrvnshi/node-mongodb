@@ -27,6 +27,7 @@
     "joi": "^17.4.0",
     "joi-image-extension": "^1.0.0",
     "joi-objectid": "^3.0.1",
+    "json2html": "^0.0.8",
     "jsonwebtoken": "^8.5.1",
     "libphonenumber-js": "^1.9.22",
     "mongoose": "^5.12.0",

@@ -72,6 +72,7 @@ query_output.js
 public/document/company
 public/document/property
 public/document/user
+public/liveMatches.html
 public/document/tokenization
 public/html
 public/ratingImages
