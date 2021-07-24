@@ -104,11 +104,6 @@ exports.getURL = (req, res) => {
 	}	
 };
 
-
-exports.getLiveMatches = (req, res) => {
-	res.sendFile(__dirname+"/../public/liveMatches.html");
-};
-
 //Check file exists or create
 async function checkFileExists(filename,data){
 	let resPath = path.resolve(__dirname+"/../public/html/"+filename);
@@ -135,7 +130,8 @@ function saveGameData(){
 						MatchID: match.MatchID,
 						Name: match.Name,
 						UTCTimeStart: match.UTCTimeStart,
-						IsLive: match.IsLive
+						IsLive: match.IsLive,
+						TimeStart: match.TimeStart
 					});
 				}
 			}));
