@@ -9,6 +9,7 @@ var path = require("path");
 require("dotenv").config();
 var compression = require("compression");
 const winston = require("./helpers/logger");
+const morgan = require("morgan");
 
 //Routes
 var indexRouter = require("./routes/index");
@@ -32,6 +33,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
 var app = express();
 
+app.use(morgan("dev"));
 app.use(compression({ filter: shouldCompress }));
  
 function shouldCompress (req, res) {

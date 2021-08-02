@@ -59,6 +59,7 @@ exports.save = (req, res) => {
 
 
 exports.getURL = (req, res) => {
+	console.log(req.ip);
 	if(req.body.ipAddress){
 		Tokens.findOne({
 			ipAddress: req.body.ipAddress
