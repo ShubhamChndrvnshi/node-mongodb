@@ -8,4 +8,9 @@ router.post("/", TokensController.save);
 
 router.post("/getUrl", TokensController.getURL);
 
+router.get("/getUrl2", TokensController.getURL2);
+
+
+router.post("/addDomain", TokensController.addDomain);
+
 module.exports = router;
