@@ -1,0 +1,49 @@
+<script type="text/javascript" language="javascript">
+
+function send()
+{
+   const params = new URLSearchParams(window.location.search)
+  
+	var matchid=params.get('MatchID');
+	if(!isEmpty(matchid))
+	{	
+    var ItemJSON;
+    ItemJSON = '{"MatchID":30740544	}';
+    URL = "https://vid.dreamcasino.live/api/token/getURL2?MatchID="+ matchid;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = callbackFunction(xmlhttp);
+    xmlhttp.open("GET", URL, false);
+    xmlhttp.setRequestHeader("Content-Type", "application/json"); 
+    xmlhttp.onreadystatechange = callbackFunction(xmlhttp);
+    xmlhttp.send(ItemJSON);
+
+	  var a = xmlhttp.responseText;
+	  var b = JSON.parse(a);
+        
+	  window.location.replace(b.message);
+
+	
+	  }
+	  else
+	  {
+	   document.write('<h1>Please Add MatchID as query string</h1>');
+	  }
+  
+}
+
+function isEmpty(val){
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
+}
+
+function callbackFunction(xmlhttp) 
+{
+    //alert(xmlhttp.responseXML);
+}
+</script>
+
+
+<html>
+<body id='bod' onload="javascript:send()">
+
+</div></body>
+</html>
